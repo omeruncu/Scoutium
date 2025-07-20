@@ -51,6 +51,8 @@ def base_models(X, y, scoring=["accuracy", "precision", "f1", "roc_auc"], n_jobs
                     for score in scoring
                 }
 
+                model.fit(X, y)
+
                 models_dict[name] = model
                 results_dict[name] = metrics
 

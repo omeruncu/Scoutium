@@ -48,6 +48,9 @@ labeled_df = encode_column(pivot_df, config, column="potential_label")
 # labeled_df.head()
 # labeled_df.info()
 
+labeled_df.to_csv(config["paths"]["cleaned_data"], index=False)
+print(f"[✔] cleaned.csv kaydedildi → {config['paths']['cleaned_data']}")
+
 num_cols = get_numeric_columns(labeled_df)
 num_cols = [col for col in num_cols if col != "potential_label_encoded"]
 
@@ -92,27 +95,22 @@ ensemble_models_dict = {
 
 metrics_df = compile_model_metrics(base_models_dict, best_models, ensemble_models_dict, X_test_scaled, y_test)
 print("\nTam Model Karşılaştırma Tablosu:")
-print(metrics_df)
+metrics_df_sorted = metrics_df.sort_values(by="ROC_AUC", ascending=False)
+print(metrics_df_sorted)
+
 
 from src.utils.reports_writer import save_report
 
 # Tam tablo
-save_report(metrics_df, report_name="model_comparison")
+save_report(metrics_df_sorted, report_name="model_comparison")
 
 
-from src.utils.model_saver import save_models
+from src.utils.model_saver import save_models_from_metrics
 
-models_to_save = {
-    "Base_RF": base_models_dict["RF"],
-    "Best_RF": best_models["RF"],
-    "Voting": voting_clf
+all_model_objs = {
+    **best_models,             # örn. {"RF": rf_model, "XGBoost": ...}
+    "Voting": voting_clf,
+    "Stacking": stacking_clf
 }
 
-custom_names = {
-    "Base_RF": "base_rf_model.pkl",
-    "Best_RF": "best_rf_model.pkl",
-    "Voting": "voting_classifier.pkl"
-}
-
-save_models(models=models_to_save, names=custom_names)
-
+save_models_from_metrics(metrics_df_sorted, all_model_objs, top_n=3, weighted=True)
