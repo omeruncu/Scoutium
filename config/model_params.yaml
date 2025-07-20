@@ -1,0 +1,28 @@
+knn:
+  n_neighbors: [5, 10, 20]
+
+cart:
+  max_depth: [3, 5, 10]
+  min_samples_split: [2, 5, 10]
+
+rf:
+  max_depth: [8, 15, None]
+  max_features: [5, 7, "auto"]
+  min_samples_split: [15, 20]
+  n_estimators: [200, 300]
+
+xgboost:
+  learning_rate: [0.1, 0.01]
+  max_depth: [5, 8]
+  n_estimators: [100, 200]
+  colsample_bytree: [0.5, 1]
+
+lightgbm:
+  learning_rate: [0.01, 0.1]
+  n_estimators: [300, 500]
+  colsample_bytree: [0.7, 1]
+
+catboost:
+  depth: [4, 6]
+  iterations: [100, 200]
+  learning_rate: [0.01, 0.1]

@@ -1,0 +1,31 @@
+paths:
+  attributes_raw: data/raw/scoutium_attributes.csv
+  labels_raw: data/raw/scoutium_potential_labels.csv
+  merged_data: data/processed/merged.csv
+  cleaned_data: data/processed/cleaned.csv
+  model_output: models/
+  report_output: reports/markdown/
+  visual_output: reports/visuals/
+
+settings:
+  csv_separator: ";"
+
+preprocessing:
+  drop_position_ids: [1]
+  encoding:
+    potential_label:
+      method: label_encoder
+      output_column: potential_label_encoded
+  filters:
+    drop_positions:
+      enabled: true
+      position_ids: [ 1 ]
+
+    drop_labels:
+      enabled: true
+      labels_to_drop: [ "below_average" ]
+
+train_test_split:
+  test_size: 0.2
+  random_state: 42
+  stratify: true
